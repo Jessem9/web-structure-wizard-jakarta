@@ -19,11 +19,11 @@ const Services = () => {
   const { services, categories, sousCategories } = mockData;
   
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>("all");
   
   // Filtrer les sous-catégories disponibles en fonction de la catégorie sélectionnée
-  const filteredSubCategories = selectedCategory
+  const filteredSubCategories = selectedCategory !== "all"
     ? sousCategories.filter(sc => sc.categorie.id === parseInt(selectedCategory, 10))
     : sousCategories;
   
@@ -34,11 +34,11 @@ const Services = () => {
       service.description.toLowerCase().includes(searchTerm.toLowerCase());
       
     const matchesCategory = 
-      !selectedCategory || 
+      selectedCategory === "all" || 
       service.sousCategorie.categorie.id === parseInt(selectedCategory, 10);
       
     const matchesSubCategory = 
-      !selectedSubCategory || 
+      selectedSubCategory === "all" || 
       service.sousCategorie.id === parseInt(selectedSubCategory, 10);
       
     return matchesSearch && matchesCategory && matchesSubCategory;
@@ -53,8 +53,8 @@ const Services = () => {
   // Réinitialiser les filtres
   const resetFilters = () => {
     setSearchTerm("");
-    setSelectedCategory("");
-    setSelectedSubCategory("");
+    setSelectedCategory("all");
+    setSelectedSubCategory("all");
   };
 
   return (
@@ -85,7 +85,7 @@ const Services = () => {
                     <SelectValue placeholder="Catégorie" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Toutes les catégories</SelectItem>
+                    <SelectItem value="all">Toutes les catégories</SelectItem>
                     {categories.map(cat => (
                       <SelectItem key={cat.id} value={cat.id.toString()}>
                         {cat.nom}
@@ -97,13 +97,13 @@ const Services = () => {
                 <Select
                   value={selectedSubCategory}
                   onValueChange={setSelectedSubCategory}
-                  disabled={!selectedCategory}
+                  disabled={selectedCategory === "all"}
                 >
                   <SelectTrigger className="w-full md:w-[200px]">
                     <SelectValue placeholder="Sous-catégorie" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Toutes les sous-catégories</SelectItem>
+                    <SelectItem value="all">Toutes les sous-catégories</SelectItem>
                     {filteredSubCategories.map(subCat => (
                       <SelectItem key={subCat.id} value={subCat.id.toString()}>
                         {subCat.nom}
