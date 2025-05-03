@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, User, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,12 @@ import { useState } from "react";
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  // Hide navbar on login and register pages
+  if (location.pathname === "/connexion" || location.pathname === "/inscription") {
+    return null;
+  }
 
   return (
     <nav className="bg-white shadow-md">
